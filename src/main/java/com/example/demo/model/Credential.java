@@ -2,13 +2,14 @@ package com.example.demo.model;
 
 import java.util.Optional;
 
+
 //import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
 
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.example.demo.repository.EmployeeRepository;
+import com.example.demo.repository.CredRepository;
 
 import lombok.ToString;
 
@@ -37,7 +38,7 @@ public class Credential {
 	}
 	
 	
-	public ServiceResponse validateAuthentication(Credential emp,EmployeeRepository repository) {
+	public ServiceResponse validateAuthentication(Credential emp,CredRepository repository) {
 		Optional<Credential> user=repository.findById(emp.getUserId());
 		
 		ServiceResponse response = new ServiceResponse();
