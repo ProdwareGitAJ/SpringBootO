@@ -17,13 +17,17 @@ import lombok.ToString;
 
 @Document(collection="Credential")
 public class Credential {
-	
+	//variable for database reference 
 	@Transient
     public static final String SEQUENCE_NAME = "user_sequence";
 	
+	//variables
 	@Id
 	private String userId;
 	private String passwd;
+	private String role;
+	
+	//getters and setters
 	public String getPasswd() {
 		return passwd;
 	}
@@ -35,6 +39,12 @@ public class Credential {
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
 	
@@ -60,6 +70,7 @@ public class Credential {
 			}
 		}
 		return response;
-	}	
+	}
+		
 	
 }

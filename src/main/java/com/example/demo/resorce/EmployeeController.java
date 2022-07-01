@@ -2,9 +2,6 @@ package com.example.demo.resorce;
 
 import java.util.List;
 
-
-
-
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Credential;
+import com.example.demo.model.Employee;
 import com.example.demo.model.ServiceResponse;
 
 import static com.example.demo.model.Credential.*;
@@ -28,18 +26,22 @@ import com.example.demo.service.SequenceGeneratorService;
 public class EmployeeController {
 	@Autowired
 	private CredRepository credrepository;
-	//private EmpRepository emprepository;
+	private EmpRepository emprepository;
 	
 	@Autowired
 	private SequenceGeneratorService service;
 	
 	@PostMapping("/addEmployee")
-	public String saveEmployee(@RequestBody Credential emp) {
+	public String saveEmployee(@RequestBody Employee emp) {
+		emprepository.save(emp);
+		return "Added Employee with id: " + emp.getUser_Id();
+	}
+	@PostMapping("/generateEmployee")
+	public String generateEmployee(@RequestBody Credential emp) {
 		emp.setUserId("EMPP"+service.getSequenceNumber(SEQUENCE_NAME));
 		credrepository.save(emp);
-		return "Added Employee with id : " + emp.getUserId();
+		return "Employee generated with id: "+emp.getUserId();
 	}
-	
 	@PostMapping("/editEmployee")
 	public String editEmployee(@RequestBody Credential emp)
 	{
@@ -62,7 +64,7 @@ public class EmployeeController {
 		return credrepository.findById(id);
 	}
 	
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/deleteEmployee/{id}")
 	public String deleteBook(@PathVariable String id) {
 		credrepository.deleteById(id);
 		return "Student deleted with id : " + id;
