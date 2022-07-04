@@ -2,6 +2,7 @@ package com.example.demo.resorce;
 
 import java.util.List;
 
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,8 @@ import com.example.demo.service.SequenceGeneratorService;
 
 @RestController
 public class EmployeeController {
-	@Autowired
-	private CredRepository credrepository;
-	private EmpRepository emprepository;
+	private @Autowired CredRepository credrepository;
+	private @Autowired EmpRepository emprepository;
 	
 	@Autowired
 	private SequenceGeneratorService service;
@@ -38,20 +38,35 @@ public class EmployeeController {
 	}
 	@PostMapping("/generateEmployee")
 	public String generateEmployee(@RequestBody Credential emp) {
-		emp.setUserId("EMPP"+service.getSequenceNumber(SEQUENCE_NAME));
+		emp.setUserId(emp.getRole()+service.getSequenceNumber(SEQUENCE_NAME));
 		credrepository.save(emp);
 		return "Employee generated with id: "+emp.getUserId();
 	}
 	@PostMapping("/editEmployee")
-	public String editEmployee(@RequestBody Credential emp)
+	public String editEmployee(@RequestBody Employee emp)
 	{
-		credrepository.save(emp);
-		return "Employee edited with id: "+emp.getUserId();
+		emprepository.save(emp);
+		return "Employee edited with id: "+emp.getUser_Id();
 	}
 	
 	@GetMapping("/findAllemployee")
-	public List<Credential> getBooks() {
-		return (List<Credential>) credrepository.findAll();
+	public List<Employee> getemployees() {
+		try {
+		return (List<Employee>) emprepository.findAll();
+		}
+		catch (Exception e) {
+			return null;
+		}
+	}
+	
+	@GetMapping("/findAllemployeeCreds")
+	public List<Credential> getemployeeCreds() {
+		try {
+			return (List<Credential>) credrepository.findAll();
+		}
+		catch (Exception e) {
+			return null;
+		}
 	}
 	@PostMapping("/loginCheck")
 	public ServiceResponse check_login(@RequestBody Credential employee) {
@@ -59,14 +74,15 @@ public class EmployeeController {
 	}	
 
 	@GetMapping("/findAllemployee/{id}")
-	public Optional<Credential> getBook(@PathVariable String id) {
+	public Optional<Employee> getEmployee(@PathVariable String id) {
 		
-		return credrepository.findById(id);
+		return emprepository.findById(id);
 	}
 	
 	@DeleteMapping("/deleteEmployee/{id}")
-	public String deleteBook(@PathVariable String id) {
+	public String deleteEmployee(@PathVariable String id) {
 		credrepository.deleteById(id);
-		return "Student deleted with id : " + id;
+		emprepository.deleteById(id);
+		return "Employee deleted with id : " + id;
 	}
 }

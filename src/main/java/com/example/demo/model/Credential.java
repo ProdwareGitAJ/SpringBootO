@@ -19,13 +19,13 @@ import lombok.ToString;
 public class Credential {
 	//variable for database reference 
 	@Transient
-    public static final String SEQUENCE_NAME = "user_sequence";
+    public static String SEQUENCE_NAME;
 	
 	//variables
 	@Id
 	private String userId;
 	private String passwd;
-	private String role;
+	private String role,active;
 	
 	//getters and setters
 	public String getPasswd() {
@@ -45,9 +45,23 @@ public class Credential {
 	}
 	public void setRole(String role) {
 		this.role = role;
+		if(this.role.equalsIgnoreCase("EMPP"))
+		{
+			SEQUENCE_NAME="employee_sequence";
+		}
+		else if(this.role.equalsIgnoreCase("ADMM"))
+		{
+			SEQUENCE_NAME="admin_sequence";
+		}
+	}
+	public String getActive() {
+		return active;
+	}
+	public void setActive(String active) {
+		this.active = active;
 	}
 	
-	
+	//user validation function
 	public ServiceResponse validateAuthentication(Credential emp,CredRepository repository) {
 		Optional<Credential> user=repository.findById(emp.getUserId());
 		
@@ -71,6 +85,7 @@ public class Credential {
 		}
 		return response;
 	}
+	
 		
 	
 }
